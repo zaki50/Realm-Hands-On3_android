@@ -27,7 +27,7 @@ public class MyApplication extends Application {
 
     @NonNull
     private RealmConfiguration buildRealmConfiguration() {
-        return return new RealmConfiguration.Builder(this)
+        return new RealmConfiguration.Builder(this)
                 .schemaVersion(1L)
                 .migration(new RealmMigration() {
                     @Override
