@@ -1,9 +1,13 @@
 package io.realm.handson3.twitter;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
+import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
 import twitter4j.TwitterFactory;
 
 public class MyApplication extends Application {
@@ -18,6 +22,26 @@ public class MyApplication extends Application {
                 "<consumerKey>",
                 "<consumerSecret>");
 
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build());
+        Realm.setDefaultConfiguration(buildRealmConfiguration());
+    }
+
+    @NonNull
+    private RealmConfiguration buildRealmConfiguration() {
+        return return new RealmConfiguration.Builder(this)
+                .schemaVersion(1L)
+                .migration(new RealmMigration() {
+                    @Override
+                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+                        if (oldVersion == 0L) {
+                            final RealmObjectSchema tweetSchema = realm.getSchema().get("Tweet");
+                            tweetSchema.addField("favorited", boolean.class);
+
+                            //noinspection UnusedAssignment
+                            oldVersion++;
+                        }
+                    }
+                })
+                .build();
+
     }
 }
