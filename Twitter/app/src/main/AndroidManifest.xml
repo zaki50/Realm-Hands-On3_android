@@ -34,6 +34,11 @@
                 <data android:scheme="${applicationId}.callback"/>
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".UpdateService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>
